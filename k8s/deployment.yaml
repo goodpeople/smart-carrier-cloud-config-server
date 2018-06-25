@@ -29,20 +29,20 @@ spec:
             path: /health
             port: httpport
           initialDelaySeconds: 20
-          periodSeconds: 1
+          periodSeconds: 10
           failureThreshold: 40
         livenessProbe:
           httpGet:
             path: /health
             port: httpport
-          initialDelaySeconds: 30
-          periodSeconds: 5
+          initialDelaySeconds: 60
+          periodSeconds: 25
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "0.2"
-          limits:
-            memory: "128Mi"
+            memory: "512Mi"
             cpu: "0.5"
+          limits:
+            memory: "1024Mi"
+            cpu: "1"
       imagePullSecrets:
       - name: docker.redbee

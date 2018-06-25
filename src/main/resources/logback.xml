@@ -7,18 +7,18 @@
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-			<Pattern>${FILE_LOG_PATTERN}</Pattern>
+			       <Pattern>${FILE_LOG_PATTERN}</Pattern>
         </encoder>
     </appender>
 
-    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+    <!--appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
       <destination>${LOGSTASH_URL:-logstash:5000}</destination>
       <keepAliveDuration>5 minutes</keepAliveDuration>
       <encoder class="net.logstash.logback.encoder.LogstashEncoder">
       <includeMdc>true</includeMdc>
-	  <customFields>{"appname": "${APPNAME:-kpack-cloud-config-server}", "environment": "${ENVIRONMENT:-test}"}</customFields>
+	    <customFields>{"appname": "${APPNAME:-kpack-cloud-config-server}", "environment": "${ENVIRONMENT:-test}"}</customFields>
       </encoder>
-    </appender>
+    </appender-->
 
 	<logger name="io.redbee.rest.template.request" level="${LOGLEVEL:-INFO}">
         <appender-ref ref="CONSOLE" />
@@ -30,6 +30,6 @@
 
 	<root level="${LOGLEVEL:-INFO}">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="LOGSTASH" />
+        <!--appender-ref ref="LOGSTASH" /-->
     </root>
 </configuration>
