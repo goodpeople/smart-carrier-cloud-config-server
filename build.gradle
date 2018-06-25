@@ -95,7 +95,7 @@ task buildDocker(type: Docker, dependsOn: build) {
 	push = true
 	dryRun = false
 	tagVersion = "${dockerTag}"
-	tag = "docker.dev.redbee.io/${jar.baseName}"
+	tag = "registry.dev.redbee.io/${jar.baseName}"
 	addFile {
 		from jar
 		rename { "${jar.baseName}.jar"}
