@@ -1,0 +1,54 @@
+#!/usr/bin/env groovy
+pipeline {
+
+
+
+  environment {
+    rootFolder = pwd()
+    BUILD_ID = "${env.BUILD_ID}"
+	HOST_WORKSPACE = "/data/jenkins/jenkins_home/workspace"
+	DEPLOY_URL = "http://URL_K8S:32000/health"
+  }
+
+  agent any
+
+  stages {
+    stage('Preparation') { // for display purposes
+      // Get some code from a Bitbucket repository
+      //git branch: 'build', credentialsId: 'jenkins', url: 'http://jenkins@repowe.eastus.cloudapp.azure.com/scm/we/ms-clientes.git'
+      steps {
+        echo 'Preparation'
+        echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+      }
+    }
+    stage('Build') {
+      steps {
+        echo 'build docker image....'
+        sh 'environment=test ./gradlew -x test buildDocker'
+      }
+    }
+
+
+    stage('Deploy pods') {
+      steps {
+        echo 'deploy kubernetes...'
+        sh 'kubectl delete -f k8s/deployment.yaml || :'
+        sh 'kubectl create -f k8s/deployment.yaml'
+
+      }
+    }
+    stage('Deploy Service') {
+          steps {
+            echo 'deploy kubernetes...'
+            sh 'kubectl delete -f k8s/service.yaml || :'
+            sh 'kubectl create -f k8s/service.yaml'
+			timeout(time: 120, unit: 'SECONDS') {
+				sh 'kubectl rollout status deployment/rfsc-cloud-config-server'
+			}
+          }
+        }
+
+  }
+
+
+}

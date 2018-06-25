@@ -1,0 +1,14 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kpack-cloud-config-server
+spec:
+  selector:
+    app: kpack-cloud-config-server
+  ports:
+    - name: http
+      protocol: TCP
+      nodePort: 32000
+      port: 8888
+      targetPort: 8888
+  type: NodePort

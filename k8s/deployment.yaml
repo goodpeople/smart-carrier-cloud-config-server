@@ -1,0 +1,43 @@
+kind: Deployment
+apiVersion: v1
+metadata:
+  name: kpack-cloud-config-server
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kpack-cloud-config-server
+    spec:
+      containers:
+      - name: kpack-cloud-config-server
+        image: registry.dev.redbee.io/kpack-cloud-config-server:latest
+        imagePullPolicy: Always
+        env:
+          - name: "SPRING_PROFILES_ACTIVE"
+            value: "dev"
+        ports:
+        - name: httpport
+          containerPort: 8888
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: httpport
+          initialDelaySeconds: 20
+          periodSeconds: 1
+          failureThreshold: 40
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: httpport
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "0.2"
+          limits:
+            memory: "128Mi"
+            cpu: "0.5"
+      imagePullSecrets:
+      - name: docker.redbee

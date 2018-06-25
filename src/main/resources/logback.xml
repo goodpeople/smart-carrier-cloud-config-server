@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <property name="LOG_FILE" value="log/media.log"/>
+    <property name="FILE_LOG_PATTERN" value="%-4relative [%thread] %-5level %logger{35} - %msg %n"/>
+	<!--	<property name="LOGLEVEL" value="INFO"/> -->
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<Pattern>${FILE_LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+      <destination>${LOGSTASH_URL:-logstash:5000}</destination>
+      <keepAliveDuration>5 minutes</keepAliveDuration>
+      <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+      <includeMdc>true</includeMdc>
+	  <customFields>{"appname": "${APPNAME:-rfsc-cloud-config-server}", "environment": "${ENVIRONMENT:-test}"}</customFields>
+      </encoder>
+    </appender>
+
+	<logger name="io.redbee.rest.template.request" level="${LOGLEVEL:-INFO}">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+	<logger name="com.zaxxer.hikari" level="${LOGLEVEL:-INFO}">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+	<root level="${LOGLEVEL:-INFO}">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="LOGSTASH" />
+    </root>
+</configuration>
