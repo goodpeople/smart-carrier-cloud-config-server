@@ -1,4 +1,4 @@
-package com.rfsc.cloud.config.configuration;
+package com.kpack.cloud.config.configuration;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -7,21 +7,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-@Profile("prod")
+@Profile({"local", "dev", "qa"})
 @Slf4j
-public class ConfigProduction extends WebSecurityConfigurerAdapter {
+public class ConfigDevelopment extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        log.info("Configuracion de seguridad para PRODUCCION");
+        log.info("Configuracion de seguridad para DESARROLLO");
         http.csrf()
             .disable()
             .authorizeRequests()
-            .antMatchers("/health", "/info")
-            .permitAll()
-            .anyRequest()
-            .authenticated()
-            .and()
-            .httpBasic();
+            .antMatchers("/**")
+            .permitAll();
     }
 }

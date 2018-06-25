@@ -16,7 +16,7 @@
       <keepAliveDuration>5 minutes</keepAliveDuration>
       <encoder class="net.logstash.logback.encoder.LogstashEncoder">
       <includeMdc>true</includeMdc>
-	  <customFields>{"appname": "${APPNAME:-rfsc-cloud-config-server}", "environment": "${ENVIRONMENT:-test}"}</customFields>
+	  <customFields>{"appname": "${APPNAME:-kpack-cloud-config-server}", "environment": "${ENVIRONMENT:-test}"}</customFields>
       </encoder>
     </appender>
 

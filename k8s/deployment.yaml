@@ -1,9 +1,14 @@
+apiVersion: apps/v1
 kind: Deployment
-apiVersion: v1
 metadata:
-  name: kpack-cloud-config-server
+  name: kpack-cloud-config-server-deployment
+  labels:
+    app: kpack-cloud-config-server
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: kpack-cloud-config-server
   template:
     metadata:
       labels:

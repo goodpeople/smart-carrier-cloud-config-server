@@ -5,9 +5,9 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'docker'
 apply plugin: 'maven'
-apply plugin: 'com.gorylenko.gradle-git-properties'
+//apply plugin: 'com.gorylenko.gradle-git-properties'
 
-group = 'com.rfsc.cloud.config'
+group = 'com.kpack.cloud.config'
 version = '1.0.0'
 
 
@@ -84,41 +84,38 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '4.2.1'
 }
 
+////START Build docker image
+if (!project.hasProperty("dockerImgName")) {
+    ext.dockerImgName = "${jar.baseName}"
+}
 if (!project.hasProperty("dockerTag")) {
     ext.dockerTag = "latest"
 }
-//START Build docker image
+if (!project.hasProperty("dockerRegistry")) {
+    ext.dockerRegistry = "registry.dev.redbee.io"
+}
+if (!project.hasProperty("dockerPushToRegistry")) {
+    ext.dockerPushToRegistry = true
+}
 task buildDocker(type: Docker, dependsOn: build) {
-	baseImage = "anapsix/alpine-java:8_server-jre_unlimited"
-	maintainer = "kpack"
-	hostUrl = "https://registry.dev.redbee.io"
-	push = true
-	dryRun = false
-	tagVersion = "${dockerTag}"
-	tag = "registry.dev.redbee.io/${jar.baseName}"
-	addFile {
-		from jar
-		rename { "${jar.baseName}.jar"}
-	}
+    baseImage = "frolvlad/alpine-oraclejdk8:slim"
+    maintainer = "kpack"
+    hostUrl = "https://docker.dev.redbee.io"
+    push = dockerPushToRegistry.toBoolean()
+    dryRun = false
+    tagVersion = "${dockerTag}"
+    tag = "${dockerRegistry}/${dockerImgName}"
+    addFile {
+        from bootJar
+        rename { "${dockerImgName}.jar" }
+    }
+    addFile("./java-entrypoint.sh", "/java-entrypoint.sh")
+    exposePort(8080)
 
-	entryPoint(
-			[
-					"java",
-					"-Djava.security.egd=file:/dev/./urandom",
-					"-Dcom.sun.management.jmxremote",
-                    "-Dcom.sun.management.jmxremote.authenticate=false",
-                    "-Dcom.sun.management.jmxremote.ssl=false",
-                    "-Dcom.sun.management.jmxremote.local.only=false",
-                    "-Dcom.sun.management.jmxremote.port=1099",
-                    "-Dcom.sun.management.jmxremote.rmi.port=1099",
-                    "-Djava.rmi.server.hostname=127.0.0.1",
-                    "-XX:+UnlockExperimentalVMOptions",
-                    "-XX:+UseCGroupMemoryLimitForHeap",
-                    "-XX:MaxRAMFraction=1",
-					"-jar",
-					"/${jar.baseName}.jar"
-			]
-	)
+    entryPoint([
+        "/java-entrypoint.sh",
+        "/${dockerImgName}.jar"
+    ])
 }
 
 bootRun {

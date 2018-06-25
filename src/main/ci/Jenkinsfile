@@ -43,7 +43,7 @@ pipeline {
             sh 'kubectl delete -f k8s/service.yaml || :'
             sh 'kubectl create -f k8s/service.yaml'
 			timeout(time: 120, unit: 'SECONDS') {
-				sh 'kubectl rollout status deployment/rfsc-cloud-config-server'
+				sh 'kubectl rollout status deployment/kpack-cloud-config-server'
 			}
           }
         }
