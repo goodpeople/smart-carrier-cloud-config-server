@@ -100,7 +100,7 @@ if (!project.hasProperty("dockerPushToRegistry")) {
 task buildDocker(type: Docker, dependsOn: build) {
     baseImage = "frolvlad/alpine-oraclejdk8:slim"
     maintainer = "kpack"
-    hostUrl = "https://docker.dev.redbee.io"
+    hostUrl = "https://registry.dev.redbee.io"
     push = dockerPushToRegistry.toBoolean()
     dryRun = false
     tagVersion = "${dockerTag}"
