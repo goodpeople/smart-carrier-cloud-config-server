@@ -7,7 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
-@Profile("prod")
+@Profile("no_se_usa")
 @Slf4j
 public class ConfigProduction extends WebSecurityConfigurerAdapter {
 

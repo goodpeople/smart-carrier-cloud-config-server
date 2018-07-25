@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: file://${user.home}/PONER-PATH-AL-REPO-LOCAL
+          uri: file://${user.home}/projects/redbee/kpack/smart-carrier-cloud-config
 management:
   endpoints:
     web:

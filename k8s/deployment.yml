@@ -20,7 +20,7 @@ spec:
         imagePullPolicy: Always
         env:
           - name: "SPRING_PROFILES_ACTIVE"
-            value: "dev"
+            value: "prod"
         ports:
         - name: httpport
           containerPort: 8888
@@ -29,7 +29,7 @@ spec:
             path: /health
             port: httpport
           initialDelaySeconds: 10
-          periodSeconds: 10
+          periodSeconds: 20
           failureThreshold: 40
         livenessProbe:
           httpGet:
